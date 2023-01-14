@@ -27,28 +27,21 @@ class Timetable extends Component {
 
     render() {
         return (
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Time</th>
-                        <th>Duration</th>
-                        <th>Room</th>
-                        <th>Teacher</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div className="timetable">
+                <div className="timeline">
                     {this.state.timetable.map((currentClass: Class, index) => (
-                        <tr key={currentClass.name + index} className={currentClass.name.toLowerCase()}>
-                            <td>{currentClass.name}</td>
-                            <td>{currentClass.time}</td>
-                            <td>{currentClass.duration}</td>
-                            <td>{currentClass.room}</td>
-                            <td>{currentClass.teacher}</td>
-                        </tr>
+                        <div key={currentClass.name + index} className={`event ${currentClass.name.toLowerCase()}`}>
+                            <div className="time">{currentClass.time}</div>
+                            <div className="event-details">
+                                <div className="event-name">{currentClass.name}</div>
+                                <div className="event-duration">{currentClass.duration}</div>
+                                <div className="event-room">{currentClass.room}</div>
+                                <div className="event-teacher">{currentClass.teacher}</div>
+                            </div>
+                        </div>
                     ))}
-                </tbody>
-            </table>
+                </div>
+            </div>
         );
     }
 }

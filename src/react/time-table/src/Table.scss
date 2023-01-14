@@ -1,29 +1,50 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+.timetable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .timeline {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        .event {
+            width: 200px;
+            margin-right: 20px;
+            text-align: center;
+            .time {
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .event-details {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .event-name {
+                    font-weight: bold;
+                }
+                .event-duration, .event-room, .event-teacher {
+                    font-size: 0.8em;
+                }
+            }
+        }
     }
-    th {
-        background-color: #f2f2f2;
+    .math {
+        background-color: #f8d7da;
     }
-}
-
-.math {
-    background-color: #f8d7da;
-}
-
-.english {
-    background-color: #c6e0f5;
-}
-
-.science {
-    background-color: #d9f5e3;
-}
-
-.history {
-    background-color: #f5e8c8;
+    .english {
+        background-color: #c6e0f5;
+    }
+    .science {
+        background-color: #d9f5e3;
+    }
+    .history {
+        background-color: #f5e8c8;
+    }
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        .event {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+    }
 }
