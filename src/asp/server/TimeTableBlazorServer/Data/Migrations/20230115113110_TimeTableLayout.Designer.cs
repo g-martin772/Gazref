@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeTableBlazorServer.Data;
 
@@ -11,9 +12,11 @@ using TimeTableBlazorServer.Data;
 namespace TimeTableBlazorServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230115113110_TimeTableLayout")]
+    partial class TimeTableLayout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +176,7 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MemberId")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -187,8 +190,7 @@ namespace TimeTableBlazorServer.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MemberId")
-                        .IsUnique()
-                        .HasFilter("[MemberId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Classes");
                 });
@@ -276,7 +278,7 @@ namespace TimeTableBlazorServer.Data.Migrations
                     b.Property<DateTime>("Begin")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ClassId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -444,7 +446,9 @@ namespace TimeTableBlazorServer.Data.Migrations
                 {
                     b.HasOne("TimeTableBlazorServer.Models.Teacher", "Teacher")
                         .WithOne("Class")
-                        .HasForeignKey("TimeTableBlazorServer.Models.Class", "MemberId");
+                        .HasForeignKey("TimeTableBlazorServer.Models.Class", "MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });
@@ -462,7 +466,9 @@ namespace TimeTableBlazorServer.Data.Migrations
                 {
                     b.HasOne("TimeTableBlazorServer.Models.Class", "Class")
                         .WithMany()
-                        .HasForeignKey("ClassId");
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TimeTableBlazorServer.Models.TimeTable", null)
                         .WithMany("Lessons")

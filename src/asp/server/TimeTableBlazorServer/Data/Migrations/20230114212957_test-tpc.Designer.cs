@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeTableBlazorServer.Data;
 
@@ -11,9 +12,11 @@ using TimeTableBlazorServer.Data;
 namespace TimeTableBlazorServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230114212957_test-tpc")]
+    partial class testtpc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,9 +176,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MemberId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -185,10 +185,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MemberId")
-                        .IsUnique()
-                        .HasFilter("[MemberId] IS NOT NULL");
 
                     b.ToTable("Classes");
                 });
@@ -265,46 +261,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TimeTableBlazorServer.Models.Lesson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Begin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShortName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TimeTableId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("TimeTableId");
-
-                    b.ToTable("Lessons");
-                });
-
             modelBuilder.Entity("TimeTableBlazorServer.Models.OrganisationMember", b =>
                 {
                     b.Property<int>("MemberId")
@@ -324,38 +280,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("TimeTableBlazorServer.Models.TimeTable", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("InternPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OrganisationMemberMemberId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Public")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganisationMemberMemberId");
-
-                    b.ToTable("TimeTables");
-                });
-
             modelBuilder.Entity("TimeTableBlazorServer.Models.Student", b =>
                 {
                     b.HasBaseType("TimeTableBlazorServer.Models.OrganisationMember");
@@ -363,12 +287,7 @@ namespace TimeTableBlazorServer.Data.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LessonId")
-                        .HasColumnType("int");
-
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("LessonId");
 
                     b.ToTable("Students");
                 });
@@ -377,14 +296,14 @@ namespace TimeTableBlazorServer.Data.Migrations
                 {
                     b.HasBaseType("TimeTableBlazorServer.Models.OrganisationMember");
 
-                    b.Property<int?>("LessonId")
+                    b.Property<int?>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("ClassId");
 
                     b.ToTable("Teachers");
                 });
@@ -440,15 +359,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TimeTableBlazorServer.Models.Class", b =>
-                {
-                    b.HasOne("TimeTableBlazorServer.Models.Teacher", "Teacher")
-                        .WithOne("Class")
-                        .HasForeignKey("TimeTableBlazorServer.Models.Class", "MemberId");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("TimeTableBlazorServer.Models.GazrefUser", b =>
                 {
                     b.HasOne("TimeTableBlazorServer.Models.OrganisationMember", "Account")
@@ -456,26 +366,6 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .HasForeignKey("TimeTableBlazorServer.Models.GazrefUser", "MemberId");
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("TimeTableBlazorServer.Models.Lesson", b =>
-                {
-                    b.HasOne("TimeTableBlazorServer.Models.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId");
-
-                    b.HasOne("TimeTableBlazorServer.Models.TimeTable", null)
-                        .WithMany("Lessons")
-                        .HasForeignKey("TimeTableId");
-
-                    b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("TimeTableBlazorServer.Models.TimeTable", b =>
-                {
-                    b.HasOne("TimeTableBlazorServer.Models.OrganisationMember", null)
-                        .WithMany("TimeTables")
-                        .HasForeignKey("OrganisationMemberMemberId");
                 });
 
             modelBuilder.Entity("TimeTableBlazorServer.Models.Student", b =>
@@ -486,26 +376,19 @@ namespace TimeTableBlazorServer.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TimeTableBlazorServer.Models.Lesson", null)
-                        .WithMany("Students")
-                        .HasForeignKey("LessonId");
-
                     b.Navigation("Class");
                 });
 
             modelBuilder.Entity("TimeTableBlazorServer.Models.Teacher", b =>
                 {
-                    b.HasOne("TimeTableBlazorServer.Models.Lesson", null)
+                    b.HasOne("TimeTableBlazorServer.Models.Class", "Class")
                         .WithMany("Teachers")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("ClassId");
+
+                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("TimeTableBlazorServer.Models.Class", b =>
-                {
-                    b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("TimeTableBlazorServer.Models.Lesson", b =>
                 {
                     b.Navigation("Students");
 
@@ -514,20 +397,8 @@ namespace TimeTableBlazorServer.Data.Migrations
 
             modelBuilder.Entity("TimeTableBlazorServer.Models.OrganisationMember", b =>
                 {
-                    b.Navigation("TimeTables");
-
                     b.Navigation("User")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TimeTableBlazorServer.Models.TimeTable", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("TimeTableBlazorServer.Models.Teacher", b =>
-                {
-                    b.Navigation("Class");
                 });
 #pragma warning restore 612, 618
         }
